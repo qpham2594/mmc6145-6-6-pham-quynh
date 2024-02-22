@@ -16,7 +16,16 @@ export default withIronSessionApiRoute(
     DELETE test:
       should remove book if user logged in  
     */
-    const { user } = req.session;
+    const { user } = req.session
+   /* const props = {}
+    if (user) {
+      props.user = req.session.user;
+      const book = await db.book.getByGoogleId(req.session.user.id, params.id)
+      if (book) {
+        props.book = book
+      }
+      return {props}
+    } */
       try {
         if (!user || !req.session) {
           return res.status(401).json({ error: "Unauthorized - User not logged in" });
@@ -24,10 +33,10 @@ export default withIronSessionApiRoute(
    
         if (user && req.method === "POST") {
           try {
-            const {bookId} = JSON.parse(req.body);
-             const addBook = await db.book.add([user.id, {bookId}]);
-             if (addBook) {
-              return res.status(200).json({ "Book is added": addBook })
+            const {book} = JSON.parse(req.body);
+             const addedBook = await db.book.add([user.id, {book}]);
+             if (addedBook) {
+              return res.status(200).json({ "Book is added": addedBook })
              } else {
               req.session.destroy()
               return res.status(401).json({ error: "Book not added" });
@@ -38,14 +47,14 @@ export default withIronSessionApiRoute(
           }
         } else if ( user && req.method === "DELETE") {
           try {
-            const { _id } = JSON.parse(req.body);
+            const {_id:book} = JSON.parse(req.body);
    
             if (!user) {
               req.session.destroy();
               return res.status(401).json("No user is found");
             }
    
-            const removingBook = await db.book.remove([user.id, {_id}]);
+            const removingBook = await db.book.remove([user.id, {_id:book}]);
    
             if (removingBook) {
               return res.status(200).json({ "Book is removed": removingBook });
