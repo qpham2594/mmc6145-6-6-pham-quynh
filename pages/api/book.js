@@ -17,6 +17,7 @@ export default withIronSessionApiRoute(
       should remove book if user logged in  
     */
     const { user } = req.session
+
    /* const props = {}
     if (user) {
       props.user = req.session.user;
@@ -33,8 +34,8 @@ export default withIronSessionApiRoute(
    
         if (user && req.method === "POST") {
           try {
-            const {book} = JSON.parse(req.body);
-             const addedBook = await db.book.add([user.id, {book}]);
+            const book = JSON.parse(req.body);
+             const addedBook = await db.book.add([user.id, book]);
              if (addedBook) {
               return res.status(200).json({ "Book is added": addedBook })
              } else {
@@ -47,14 +48,14 @@ export default withIronSessionApiRoute(
           }
         } else if ( user && req.method === "DELETE") {
           try {
-            const {_id:book} = JSON.parse(req.body);
+            const book = JSON.parse(req.body);
    
             if (!user) {
               req.session.destroy();
               return res.status(401).json("No user is found");
             }
    
-            const removingBook = await db.book.remove([user.id, {_id:book}]);
+            const removingBook = await db.book.remove([user.id, book.id]);
    
             if (removingBook) {
               return res.status(200).json({ "Book is removed": removingBook });
