@@ -10,23 +10,8 @@ export default withIronSessionApiRoute(
     // TODO: Respond with 404 for all other requests
     // User info can be accessed with req.session
     // No user info on the session means the user is not logged in
-    /*
-    POST tests:
-      should add book if user logged in
-    DELETE test:
-      should remove book if user logged in  
-    */
-    const { user } = req.session
 
-   /* const props = {}
-    if (user) {
-      props.user = req.session.user;
-      const book = await db.book.getByGoogleId(req.session.user.id, params.id)
-      if (book) {
-        props.book = book
-      }
-      return {props}
-    } */
+    const { user } = req.session
       try {
         if (!user || !req.session) {
           return res.status(401).json({ error: "Unauthorized - User not logged in" });
@@ -35,7 +20,7 @@ export default withIronSessionApiRoute(
         if (user && req.method === "POST") {
           try {
             const book = JSON.parse(req.body);
-             const addedBook = await db.book.add([user.id, book]);
+             const addedBook = await db.book.add(user.id, book);
              if (addedBook) {
               return res.status(200).json({ "Book is added": addedBook })
              } else {
@@ -55,7 +40,7 @@ export default withIronSessionApiRoute(
               return res.status(401).json("No user is found");
             }
    
-            const removingBook = await db.book.remove([user.id, book.id]);
+            const removingBook = await db.book.remove(user.id, book.id);
    
             if (removingBook) {
               return res.status(200).json({ "Book is removed": removingBook });
