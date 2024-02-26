@@ -51,9 +51,6 @@ export default function Book(props) {
     // Call router.replace(router.asPath) if you receive a 200 status
     const res = await fetch ('/api/book',{
     method: 'POST',
-    headers: {
-      "content-type": "application/json"
-    },
     body: JSON.stringify(book)
   })
 
@@ -70,9 +67,6 @@ export default function Book(props) {
     // Call router.replace(router.asPath) if you receive a 200 status
     const res = await fetch ('/api/book',{
       method: 'DELETE',
-      headers: {
-        "content-type": "application/json"
-      },
       body: JSON.stringify({id:book.id})
     })
   
